@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shorten URL</title>
+    <style>
+    table, th, td {
+        border: 0px solid black;
+        margin-left:auto;
+        margin-right:auto;
+    }
+    </style>
+</head>
+<body>
+
+<form method='post' action={{ url_for('home') }}>
+    <br/><br/><br/><br/><br/>
+    <p style='text-align:center;'>
+        <input type='search' name='url' style='width:700px;height:30px' autofocus />
+        <button type='submit' style='height:30px'>Submit</button>
+    </p>
+    
+    <div style='text-align:center;'>
+        <table>
+{% if valid_url is defined and not valid_url %}
+            <tr>
+                <td style='font-size:36px'>Invalid URL:</td>
+                <td style='background-color:red;color:yellow;font-size:24px;width:1000px;'>{{ original_url }}
+            </tr>
+        </table>
+{% else %}
+            <tr>
+                <td style='font-size:36px'>Shortened URL:</td>
+                <td id='shortened_url' style='background-color:lightgrey;font-size:24px;width:1000px;'>
+                    <a href='{{ shortened_url }}' target='_blank'>{{ shortened_url }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td style='font-size:36px'>Original URL:</td>
+                <td style='background-color:lightgrey;font-size:24px;width:1000px;'>
+                    <a href='{{ original_url }}' target='_blank'>{{ original_url }}</a>
+{% if preview and is_available %}
+                    <img src="{{ url_for('static', filename='tick.png') }}" style="width:25px;height:25px">
+{% elif preview and not is_available %}
+                    <img src="{{ url_for('static', filename='cross.png') }}" style="width:25px;height:25px">
+{% endif %}
+                </td>
+            </tr>
+        </table>
+        <br/>
+    {% if preview: %}
+        <table style='border: 2px solid black;'>
+        {% if 'title' in preview: %}
+            <tr>
+                <td style='font-size:36px'>{{ preview['title'] }}</td>
+            </tr>
+            <tr>
+                <td><img src="{{ preview['image'] }}"></td>
+            </tr>
+        {% elif 'error' in preview: %}
+            <tr>
+                <td style='text-align:center;background-color:red;color:yellow;font-size:36px'>{{ preview['error'] }}</td>
+            </tr>
+        {% endif %}
+        </table>
+    {% endif %}
+{% endif %}
+            
+        
+    </div>
+</form>
+
+</body>
+</html>
